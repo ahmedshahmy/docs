@@ -1,0 +1,28 @@
+import pyrebase
+import csv
+
+firebasConfig={
+    'apiKey': "AIzaSyAyOKsYNnwrxwgmMy-7qQsT7QiYIcWF3-I",
+    'authDomain': "renal-1e0ac.firebaseapp.com",
+    'databaseURL': "https://renal-1e0ac.firebaseio.com",
+    'projectId': "renal-1e0ac",
+    'storageBucket': "renal-1e0ac.appspot.com",
+    'messagingSenderId': "39709818947",
+    'appId': "1:39709818947:web:8998d016a6d9e4ffa854f6",
+    'measurementId': "G-1R80GQM1G8"
+}
+
+firebase=pyrebase.initialize_app(firebasConfig)
+db=firebase.database()
+
+with open('cr.csv') as csvfile:
+    readCSV=csv.reader(csvfile,delimiter=',')
+    
+    for row in readCSV:
+        ru=row[0]
+        creat=row[1]
+        date=row[2]
+
+        data={"RU":ru,"date":date,"Creatinine":creat}
+        db.child("patients1").push(data)
+        print("added")
