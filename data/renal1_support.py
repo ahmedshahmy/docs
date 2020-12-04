@@ -21,6 +21,7 @@ except ImportError:
 
 import pyrebase
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
 
 from datetime import datetime
 import numpy as np
@@ -75,11 +76,12 @@ def graph(name):
 
 
     
+
     plt.scatter(x, y)
     print(x,y)
     plt.yticks(y)
 
-   
+    
     
     #plt.plot(x,y)
     plt.yscale('log')
@@ -87,8 +89,13 @@ def graph(name):
     plt.xticks(x)
     plt.yticks(y)
 
+    ax = plt.gca()
+    ax.yaxis.set_major_formatter(mticker.ScalarFormatter())
+    ax.yaxis.set_minor_formatter(mticker.ScalarFormatter())
+
     plt.xlabel("date")
     plt.ylabel("-log. S.Cr")
+    plt.xticks(rotation=70)
     mng = plt.get_current_fig_manager()
     mng.resize(1000,1000)
     plt.show()
