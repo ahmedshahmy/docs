@@ -87,7 +87,7 @@ def graph(name):
     plt.yticks(y)
 
     plt.xlabel("date")
-    plt.ylabel("S.Cr")
+    plt.ylabel("-log. S.Cr")
     mng = plt.get_current_fig_manager()
     mng.resize(1000,1000)
     plt.show()

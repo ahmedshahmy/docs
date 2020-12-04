@@ -100,7 +100,7 @@ class Toplevel1:
         self.Buttongraph = tk.Button(top)
         self.Buttongraph.place(relx=0.483, rely=0.867, height=31, width=121)
         self.Buttongraph.configure(command=lambda:renal1_support.graph(self.Entryname.get()))
-        self.Buttongraph.configure(text='''See Graph''')
+        self.Buttongraph.configure(text='''Analyze''')
 
 if __name__ == '__main__':
     vp_start_gui()
