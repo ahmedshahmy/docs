@@ -69,7 +69,7 @@ class Toplevel1:
 
         self.Labeldate = tk.Label(top)
         self.Labeldate.place(relx=0.05, rely=0.422, height=21, width=134)
-        self.Labeldate.configure(text='''Date(YYYYMMDD)''')
+        self.Labeldate.configure(text='''Date(MM/DD/YYYY)''')
 
         self.Labelname = tk.Label(top)
         self.Labelname.place(relx=0.183, rely=0.222, height=21, width=41)

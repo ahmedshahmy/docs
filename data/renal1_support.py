@@ -54,6 +54,7 @@ def init(top, gui, *args, **kwargs):
     root = top
 
 def add(name,date,creat):
+    date=date+"  "
     data={"RU":name,"date":date,"Creatinine":creat}
     db.child("patients1").push(data)
     print('renal1_support.add')
