@@ -70,9 +70,15 @@ def graph(name):
     
     
     #print(p.val()["date"])
-        y.append(float(p.val()["Creatinine"]))
-        x.append(datetime.strptime(p.val()["date"],'%m/%d/%Y  '))
-   
+        try:
+
+            y.append(float(p.val()["Creatinine"]))
+            x.append(datetime.strptime(p.val()["date"],'%m/%d/%Y  '))
+        except Exception as e:
+            print(e)
+            continue
+
+            
 
 
     
