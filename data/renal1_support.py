@@ -59,7 +59,7 @@ def add(name,date,creat):
     date=date+"  "
     data={"RU":name,"date":date,"Creatinine":creat}
     db.child("patients1").push(data)
-    print('renal1_support.add')
+    print('data added..')
     sys.stdout.flush()
 
 def graph(name):
@@ -78,23 +78,28 @@ def graph(name):
     for pp in patientdata.each():
         print(pp)
         sexval=0
-
-        age=float(pp.val()["Age"])
-        ageval=pow(age,-0.203)
+        ageval=0
+        try:
+            age=float(pp.val()["Age"])
+            ageval=pow(age,-0.203)
         
-        sex=pp.val()["Sex"]
-        if sex=="M":
-            sexval=1.0
-        if sex=="F":
-            sexval=0.742
-        
+            sex=pp.val()["Sex"]
+            if sex=="M":
+                sexval=1.0
+            if sex=="F":
+                sexval=0.742
+        except Exception as e:
+            print(e)
         print(ageval)
         print (sexval)
-        gfr20=float( ( (20/( 175*ageval*sexval)) **(1/float(-1.154) ) )/0.0113 )
-        gfr15=float( ( (15/( 175*ageval*sexval)) **(1/float(-1.154) ) )/0.0113 )
-        gfr10=float( ( (10/( 175*ageval*sexval)) **(1/float(-1.154) ) )/0.0113 )
-
         
+        try:
+            gfr20=float( ( (20/( 175*ageval*sexval)) **(1/float(-1.154) ) )/0.0113 )
+            gfr15=float( ( (15/( 175*ageval*sexval)) **(1/float(-1.154) ) )/0.0113 )
+            gfr10=float( ( (10/( 175*ageval*sexval)) **(1/float(-1.154) ) )/0.0113 )
+
+        except Exception as e:
+            print(e)
         
         print(gfr20)
         print(gfr15)
@@ -152,7 +157,7 @@ def graph(name):
     plt.show()
    
 
-    print('renal1_support.graph')
+    print('graph loading..')
    
    
     
