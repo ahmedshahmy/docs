@@ -47,6 +47,7 @@ global x1
 global y1
 x1=[]
 y1=[]
+#global unitnum
 
 def init(top, gui, *args, **kwargs):
     global w, top_level, root
@@ -62,9 +63,45 @@ def add(name,date,creat):
     sys.stdout.flush()
 
 def graph(name):
+   
     x=[]
     y=[]
     patients=db.child("patients1").order_by_child("RU").equal_to(name).get()
+
+    patientdata=db.child("patientdata").order_by_child("RU").equal_to(name).get()
+    print(patientdata)
+
+    gfr20=0
+    gfr15=0
+    gfr10=0
+
+    for pp in patientdata.each():
+        print(pp)
+        sexval=0
+
+        age=float(pp.val()["Age"])
+        ageval=pow(age,-0.203)
+        
+        sex=pp.val()["Sex"]
+        if sex=="M":
+            sexval=1.0
+        if sex=="F":
+            sexval=0.742
+        
+        print(ageval)
+        print (sexval)
+        gfr20=float( ( (20/( 175*ageval*sexval)) **(1/float(-1.154) ) )/0.0113 )
+        gfr15=float( ( (15/( 175*ageval*sexval)) **(1/float(-1.154) ) )/0.0113 )
+        gfr10=float( ( (10/( 175*ageval*sexval)) **(1/float(-1.154) ) )/0.0113 )
+
+        
+        
+        print(gfr20)
+        print(gfr15)
+        print(gfr10)
+
+
+
 
     for p in patients.each():
     
@@ -91,6 +128,9 @@ def graph(name):
     
     
     #plt.plot(x,y)
+    plt.axhline(y=gfr20,color='green', label='eGFR=20')
+    plt.axhline(y=gfr15,color='blue', label='eGFR=15')
+    plt.axhline(y=gfr10,color='red', label='eGFR=10')
     plt.yscale('log')
     plt.gca().invert_yaxis()
     plt.xticks(x)
@@ -100,27 +140,23 @@ def graph(name):
     ax.yaxis.set_major_formatter(mticker.ScalarFormatter())
     ax.yaxis.set_minor_formatter(mticker.ScalarFormatter())
 
+   
+    
+
     plt.xlabel("date")
     plt.ylabel("-log. S.Cr")
     plt.xticks(rotation=70)
     mng = plt.get_current_fig_manager()
     mng.resize(1000,1000)
+    plt.legend()
     plt.show()
+   
 
     print('renal1_support.graph')
-    sys.stdout.flush()
-
-
-"""
-    i=100
-
-    while i<1000:
-        plt.axhline(y=i,color='grey')
-        i+=100
-"""
-    #plt.axhline(y=500,color='red', label='500')
-    #plt.legend()
+   
+   
     
+    sys.stdout.flush()
     #plt.yticks([100,200,300,400,500,600,700,800,900,1000])
     
 
