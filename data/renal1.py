@@ -60,7 +60,7 @@ class Toplevel1:
         top.minsize(1, 1)
         top.maxsize(1905, 1050)
         top.resizable(1,  1)
-        top.title("CKD progression ")
+        top.title("CKD progression Beta. maa.shahmy@gmail.com ")
 
         self.Entryname = tk.Entry(top)
         self.Entryname.place(relx=0.316, rely=0.2, height=33, relwidth=0.266)

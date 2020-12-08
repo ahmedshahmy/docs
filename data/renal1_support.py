@@ -84,6 +84,7 @@ def graph(name):
     
 
     plt.scatter(x, y)
+    #plt.plot(x,y)
     print(x,y)
     plt.yticks(y)
 
