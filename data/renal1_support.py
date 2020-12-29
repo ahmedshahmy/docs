@@ -39,9 +39,14 @@ firebasConfig={
 
 firebase=pyrebase.initialize_app(firebasConfig)
 db=firebase.database()
+auth=firebase.auth()
 
 #global x
 #global y
+global usr
+global passwd
+usr=""
+passwd=""
 
 global x1
 global y1
@@ -63,7 +68,8 @@ def add(name,date,creat):
     sys.stdout.flush()
 
 def graph(name):
-   
+    print(usr)
+    #auth.sign_in_with_email_and_password(usr,passwd)
     x=[]
     y=[]
     patients=db.child("patients1").order_by_child("RU").equal_to(name).get()
@@ -172,6 +178,13 @@ def destroy_window():
     top_level = None
 
 if __name__ == '__main__':
+    try:
+        usr=input("Enter Email:")
+        passwd=input("Enter password:")
+        auth.sign_in_with_email_and_password(usr,passwd)
+    except:
+        print("Invalid Username or password")
+        exit()
     import renal1
     renal1.vp_start_gui()
 

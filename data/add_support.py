@@ -41,6 +41,7 @@ firebasConfig={
 
 firebase=pyrebase.initialize_app(firebasConfig)
 db=firebase.database()
+auth=firebase.auth()
 
 
 def init(top, gui, *args, **kwargs):
@@ -62,6 +63,14 @@ def destroy_window():
     top_level = None
 
 if __name__ == '__main__':
+
+    try:
+        usr=input("Enter Email:")
+        passwd=input("Enter password:")
+        auth.sign_in_with_email_and_password(usr,passwd)
+    except:
+        print("Invalid Username or password")
+        exit()
     import add
     add.vp_start_gui()
 
