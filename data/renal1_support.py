@@ -43,8 +43,7 @@ auth=firebase.auth()
 
 #global x
 #global y
-global usr
-global passwd
+
 usr=""
 passwd=""
 
@@ -179,6 +178,7 @@ def destroy_window():
 
 if __name__ == '__main__':
     try:
+        
         usr=input("Enter Email:")
         passwd=input("Enter password:")
         auth.sign_in_with_email_and_password(usr,passwd)
