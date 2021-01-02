@@ -367,10 +367,10 @@ def destroy_window():
 if __name__ == '__main__':
     try:
 
-        #usr = input("Enter Email:")
-        #passwd = input("Enter password:")
-        usr="maa.shahmy@gmail.com"
-        passwd="19880113"
+        usr = input("Enter Email:")
+        passwd = input("Enter password:")
+        #usr="maa.shahmy@gmail.com"
+        #passwd="19880113"
         user = auth.sign_in_with_email_and_password(usr, passwd)
     except:
         print("Invalid Username or password")
