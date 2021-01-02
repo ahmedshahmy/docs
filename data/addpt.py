@@ -27,7 +27,7 @@ import matplotlib.ticker as mticker
 
 from datetime import datetime
 import numpy as np
-
+import getpass
 
 
 firebasConfig={
@@ -157,7 +157,7 @@ if __name__ == '__main__':
 
     try:
         usr=input("Enter Email:")
-        passwd=input("Enter password:")
+        passwd = getpass.getpass("Enter password:")
         #usr="maa.shahmy@gmail.com"
         #passwd="19880113"
         user=auth.sign_in_with_email_and_password(usr,passwd)
