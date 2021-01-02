@@ -74,32 +74,42 @@ class Toplevel1:
         self.Entryname.configure(font="TkFixedFont")
 
         self.Labeldate = tk.Label(top)
-        self.Labeldate.place(relx=0.05, rely=0.422, height=21, width=134)
+        self.Labeldate.place(relx=0.05, rely=0.4, height=21, width=134)
         self.Labeldate.configure(text='''Date(MM/DD/YYYY)''')
 
         self.Labelname = tk.Label(top)
-        self.Labelname.place(relx=0.183, rely=0.222, height=21, width=41)
+        self.Labelname.place(relx=0.183, rely=0.2, height=21, width=41)
         self.Labelname.configure(text='''RU''')
 
         self.Entrydate = tk.Entry(top)
-        self.Entrydate.place(relx=0.316, rely=0.422, height=33, relwidth=0.266)
+        self.Entrydate.place(relx=0.316, rely=0.4, height=33, relwidth=0.266)
         self.Entrydate.configure(background="white")
         self.Entrydate.configure(font="TkFixedFont")
 
         self.Labelcreat = tk.Label(top)
-        self.Labelcreat.place(relx=0.133, rely=0.667, height=21, width=82)
+        self.Labelcreat.place(relx=0.133, rely=0.5, height=21, width=82)
         self.Labelcreat.configure(text='''Creatinine''')
 
         self.Entrycreat = tk.Entry(top)
-        self.Entrycreat.place(relx=0.316, rely=0.644,
+        self.Entrycreat.place(relx=0.316, rely=0.5,
                               height=33, relwidth=0.266)
         self.Entrycreat.configure(background="white")
         self.Entrycreat.configure(font="TkFixedFont")
 
+        self.Labelhb = tk.Label(top)
+        self.Labelhb.place(relx=0.133, rely=0.6, height=21, width=82)
+        self.Labelhb.configure(text='''Hemoglobin''')
+
+        self.Entryhb = tk.Entry(top)
+        self.Entryhb.place(relx=0.316, rely=0.6,
+                              height=33, relwidth=0.266)
+        self.Entryhb.configure(background="white")
+        self.Entryhb.configure(font="TkFixedFont")
+
         self.Buttonadd = tk.Button(top)
         self.Buttonadd.place(relx=0.1, rely=0.867, height=31, width=131)
         self.Buttonadd.configure(command=lambda: add(
-            self.Entryname.get(), self.Entrydate.get(), self.Entrycreat.get()))
+            self.Entryname.get(), self.Entrydate.get(), self.Entrycreat.get(), self.Entryhb.get()))
         self.Buttonadd.configure(text='''Add to Database''')
 
         self.menubar = tk.Menu(top, font="TkMenuFont",
@@ -107,9 +117,14 @@ class Toplevel1:
         top.configure(menu=self.menubar)
 
         self.Buttongraph = tk.Button(top)
-        self.Buttongraph.place(relx=0.483, rely=0.867, height=31, width=121)
+        self.Buttongraph.place(relx=0.483, rely=0.767, height=31, width=121)
         self.Buttongraph.configure(command=lambda: graph(self.Entryname.get()))
-        self.Buttongraph.configure(text='''Analyze''')
+        self.Buttongraph.configure(text='''Cr Progression''')
+
+        self.Buttongraph1 = tk.Button(top)
+        self.Buttongraph1.place(relx=0.483, rely=0.867, height=31, width=121)
+        self.Buttongraph1.configure(command=lambda: graph1(self.Entryname.get()))
+        self.Buttongraph1.configure(text='''Hb Progression''')
 
 
 firebasConfig = {
@@ -134,10 +149,10 @@ global passwd
 user = ""
 passwd = ""
 
-global x1
-global y1
-x1 = []
-y1 = []
+#global x1
+#global y1
+#x1 = []
+#y1 = []
 #global unitnum
 
 
@@ -148,12 +163,94 @@ def init(top, gui, *args, **kwargs):
     root = top
 
 
-def add(name, date, creat):
-    date = date+"  "
-    data = {"RU": name, "date": date, "Creatinine": creat}
-    db.child("patients1").push(data, user['idToken'])
-    print('data added..')
+def add(name, date, creat, hb):
+    #user = auth.refresh(user['refreshToken'])
+    
+    date1 = date+"  "
+    data = {"RU": name, "date": date1, "Creatinine": creat}
+    db.child("Creat").push(data, user['idToken'])
+    print('Cr data added..')
+
+    data1 = {"RU": name, "date": date, "Hb": hb}
+    db.child("Hb").push(data1, user['idToken'])
+    print('Hb data added..')
     sys.stdout.flush()
+
+
+def graph1(name):
+    x = []
+    y = []
+
+    #user = auth.refresh(user['refreshToken'])
+
+    patients = db.child("Hb").order_by_child(
+        "RU").equal_to(name).get(user['idToken'])
+
+    patientdata = db.child("patientdata").order_by_child(
+        "RU").equal_to(name).get(user['idToken'])
+    
+    ptname=""
+
+    for pp in patientdata.each():
+        
+        try:
+            ptname=pp.val()["Name"]
+            
+        except Exception as e:
+            print(e)
+    
+
+    
+    for p in patients.each():
+
+        # print(p.val()["date"])
+        try:
+
+            y.append(float(p.val()["Hb"]))
+            x.append(datetime.strptime(p.val()["date"], '%m/%d/%Y'))
+        except Exception as e:
+            print(e)
+            continue
+
+    #print(x,y)
+
+    try:
+        plt.scatter(x, y)
+    except Exception as e:
+        print(e)
+        
+    # plt.plot(x,y)
+    #print(x, y)
+    plt.yticks(y)
+
+    # plt.plot(x,y)
+    
+    plt.title(ptname)
+
+
+    
+    plt.xticks(x)
+    plt.yticks(y)
+
+    ax = plt.gca()
+    ax.yaxis.set_major_formatter(mticker.ScalarFormatter())
+    ax.yaxis.set_minor_formatter(mticker.ScalarFormatter())
+
+    plt.axhline(y=10, color='green', label='Hb=10')
+    plt.axhline(y=8, color='red', label='Hb=8')
+
+    plt.xlabel("date")
+    plt.ylabel("Hb")
+    plt.xticks(rotation=70)
+    mng = plt.get_current_fig_manager()
+    mng.resize(800, 800)
+    plt.legend()
+    plt.show()
+
+    print('graph loading..')
+
+    sys.stdout.flush()
+    # plt.yticks([100,200,300,400,500,600,700,800,900,1000])
 
 
 def graph(name):
@@ -162,21 +259,26 @@ def graph(name):
     x = []
     y = []
 
-    patients = db.child("patients1").order_by_child(
+    #user = auth.refresh(user['refreshToken'])
+
+    patients = db.child("Creat").order_by_child(
         "RU").equal_to(name).get(user['idToken'])
     patientdata = db.child("patientdata").order_by_child(
         "RU").equal_to(name).get(user['idToken'])
-    print(patientdata)
+    #print(patientdata)
 
     gfr20 = 0
     gfr15 = 0
     gfr10 = 0
 
+    ptname=""
+
     for pp in patientdata.each():
-        print(pp)
+        #print(pp)
         sexval = 0
         ageval = 0
         try:
+            ptname=pp.val()["Name"]
             age = float(pp.val()["Age"])
             ageval = pow(age, -0.203)
 
@@ -187,8 +289,8 @@ def graph(name):
                 sexval = 0.742
         except Exception as e:
             print(e)
-        print(ageval)
-        print(sexval)
+        #print(ageval)
+        #print(sexval)
 
         try:
             gfr20 = float(((20/(175*ageval*sexval)) **
@@ -197,13 +299,16 @@ def graph(name):
                            (1/float(-1.154)))/0.0113)
             gfr10 = float(((10/(175*ageval*sexval)) **
                            (1/float(-1.154)))/0.0113)
+            gfr05 = float(((5/(175*ageval*sexval)) **
+                           (1/float(-1.154)))/0.0113)
 
         except Exception as e:
             print(e)
 
-        print(gfr20)
-        print(gfr15)
-        print(gfr10)
+        #print(gfr20)
+        #print(gfr15)
+        #print(gfr10)
+        #print(gfr05)
 
     for p in patients.each():
 
@@ -211,24 +316,28 @@ def graph(name):
         try:
 
             y.append(float(p.val()["Creatinine"]))
-            x.append(datetime.strptime(p.val()["date"], '%m/%d/%Y  '))
+            x.append(datetime.strptime(p.val()["date"], '%m/%d/%Y'))
         except Exception as e:
             print(e)
             continue
 
     plt.scatter(x, y)
     # plt.plot(x,y)
-    print(x, y)
+    #print(x, y)
     plt.yticks(y)
 
     # plt.plot(x,y)
     plt.axhline(y=gfr20, color='green', label='eGFR=20')
     plt.axhline(y=gfr15, color='blue', label='eGFR=15')
-    plt.axhline(y=gfr10, color='red', label='eGFR=10')
+    plt.axhline(y=gfr10, color='orange', label='eGFR=10')
+    plt.axhline(y=gfr10, color='red', label='eGFR=5')
     plt.yscale('log')
     plt.gca().invert_yaxis()
     plt.xticks(x)
     plt.yticks(y)
+
+
+    plt.title(ptname)
 
     ax = plt.gca()
     ax.yaxis.set_major_formatter(mticker.ScalarFormatter())
@@ -238,7 +347,7 @@ def graph(name):
     plt.ylabel("-log. S.Cr")
     plt.xticks(rotation=70)
     mng = plt.get_current_fig_manager()
-    mng.resize(1000, 1000)
+    mng.resize(800, 800)
     plt.legend()
     plt.show()
 
@@ -258,8 +367,10 @@ def destroy_window():
 if __name__ == '__main__':
     try:
 
-        usr = input("Enter Email:")
-        passwd = input("Enter password:")
+        #usr = input("Enter Email:")
+        #passwd = input("Enter password:")
+        usr="maa.shahmy@gmail.com"
+        passwd="19880113"
         user = auth.sign_in_with_email_and_password(usr, passwd)
     except:
         print("Invalid Username or password")

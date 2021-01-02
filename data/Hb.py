@@ -19,19 +19,19 @@ usr="maa.shahmy@gmail.com"
 passwd="19880113"
 user = auth.sign_in_with_email_and_password(usr, passwd)
 
-with open('cr.csv') as csvfile:
+with open('data1full.csv') as csvfile:
     readCSV=csv.reader(csvfile,delimiter=',')
-    i=0
+    i=0;
     for row in readCSV:
         i+=1
+
         ru=row[0]
-        creat=row[1]
+        hb=row[1]
         date=row[2]
 
-        data={"RU":ru,"date":date,"Creatinine":creat}
-
+        data={"RU":ru,"date":date,"Hb":hb}
         if(i%100==0):
             user = auth.refresh(user['refreshToken'])
-        db.child("Creat").push(data,user['idToken'])
+        db.child("Hb").push(data,user['idToken'])
         print("added")
         print(i)
