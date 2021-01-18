@@ -19,7 +19,7 @@ usr="maa.shahmy@gmail.com"
 passwd="19880113"
 user = auth.sign_in_with_email_and_password(usr, passwd)
 
-with open('data1full.csv') as csvfile:
+with open('data1full2k.csv') as csvfile:
     readCSV=csv.reader(csvfile,delimiter=',')
     i=0;
     for row in readCSV:
