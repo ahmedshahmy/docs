@@ -19,8 +19,12 @@ usr="maa.shahmy@gmail.com"
 passwd="19880113"
 user = auth.sign_in_with_email_and_password(usr, passwd)
 
-patients = db.child("patientsdata").order_by_child(
-        "RU").equal_to("100").get(user['idToken'])
+#db.child("Creat").remove(user['idToken'])
+
+power = input("Enter name remove:")
+
+patients = db.child("patientdata").order_by_child(
+        "Name").equal_to(power).get(user['idToken'])
 for p in patients.each():
     ikey=p.key()
     db.child("patientdata").child(ikey).remove(user['idToken'])

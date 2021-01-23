@@ -19,19 +19,9 @@ usr="maa.shahmy@gmail.com"
 passwd="19880113"
 user = auth.sign_in_with_email_and_password(usr, passwd)
 
-with open('datacrfinalerr.csv') as csvfile:
-    readCSV=csv.reader(csvfile,delimiter=',')
-    i=0
-    for row in readCSV:
-        i+=1
-        ru=row[0]
-        creat=row[1]
-        date=row[2]
 
-        data={"RU":ru,"date":date,"Creatinine":creat}
+power=input("Enter power user email:")
+data={"email":power}
 
-        if(i%100==0):
-            user = auth.refresh(user['refreshToken'])
-        db.child("Creat").push(data,user['idToken'])
-        print("added")
-        print(i)
+db.child("powerusers").push(data,user['idToken'])
+print("power user created")
