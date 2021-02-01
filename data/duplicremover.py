@@ -23,14 +23,14 @@ user = auth.sign_in_with_email_and_password(usr, passwd)
 
 power = input("Enter RU to remove duplicates:")
 
-patients = db.child("patientdata").order_by_child(
+patients = db.child("Creat").order_by_child(
         "RU").equal_to(power).get(user['idToken'])
 i=0
 for p in patients.each():
     i+=1
     ikey=p.key()
     if i>1:
-        db.child("patientdata").child(ikey).remove(user['idToken'])
+        db.child("Creat").child(ikey).remove(user['idToken'])
         print("data removed")
     else:
         print("No duplicates")
