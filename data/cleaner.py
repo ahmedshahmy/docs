@@ -1,5 +1,6 @@
 import pyrebase
 import csv
+import re
 
 firebasConfig={
     'apiKey': "AIzaSyAyOKsYNnwrxwgmMy-7qQsT7QiYIcWF3-I",
@@ -19,19 +20,25 @@ usr="maa.shahmy@gmail.com"
 passwd="19880113"
 user = auth.sign_in_with_email_and_password(usr, passwd)
 
-with open('aprhbedited.csv') as csvfile:
-    readCSV=csv.reader(csvfile,delimiter=',')
-    i=0;
-    for row in readCSV:
-        i+=1
+#db.child("Creat").remove(user['idToken'])
 
-        ru=row[0]
-        hb=row[1]
-        date=row[2]
+#power = input("Enter RU to remove duplicates:")
 
-        data={"RU":ru,"date":date,"Hb":hb}
-        if(i%100==0):
-            user = auth.refresh(user['refreshToken'])
-        db.child("Hb").push(data,user['idToken'])
-        print("added")
+patients = db.child("users").get(user['idToken'])
+i=0
+
+
+for p in patients.each():
+    x=p.val()["RU"]
+    i+=1
+    ikey=p.key()
+    print(x)
+    print(ikey)
+    if re.match("\\d+/\\d{2}",x):
+        print("All good")
+        
+    else:
+        print(x)
+        db.child("users").child(ikey).remove(user['idToken'])
+        print("data removed")
         print(i)
